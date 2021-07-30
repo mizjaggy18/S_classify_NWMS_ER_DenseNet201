@@ -29,8 +29,7 @@ RUN mkdir -p /models && \
     mkdir -p ModelDenseNet201
 
 ADD densenet201weights.best.h5 /models/ModelDenseNet201/densenet201weights.best.h5
-
-RUN chmod444 /models/ModelDenseNet201/densenet201weights.best.h5
+RUN chmod 444 /models/ModelDenseNet201/densenet201weights.best.h5
 
 
 # Install scripts
