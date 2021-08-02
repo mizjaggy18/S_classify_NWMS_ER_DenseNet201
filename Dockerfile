@@ -28,6 +28,7 @@ RUN mkdir -p /models && \
     cd /models && \
     mkdir -p ModelDenseNet201
 
+# add model
 ADD densenet201weights.best.h5 /models/ModelDenseNet201/densenet201weights.best.h5
 RUN chmod 444 /models/ModelDenseNet201/densenet201weights.best.h5
 
