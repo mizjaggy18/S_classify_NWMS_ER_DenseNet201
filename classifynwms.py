@@ -33,7 +33,7 @@ from cytomine import Cytomine, models, CytomineJob
 from cytomine.models import Annotation, AnnotationTerm, AnnotationCollection, ImageInstanceCollection, Job, Project, ImageInstance, Property
 from cytomine.models.ontology import Ontology, OntologyCollection, Term, RelationTerm, TermCollection
 # from cytomine.models.property import Tag, TagCollection, PropertyCollection
-from cytomine.utilities.software import parse_domain_list, str2bool, setup_classify, stringify
+# from cytomine.utilities.software import parse_domain_list, str2bool, setup_classify, stringify
 
 
 from PIL import Image
@@ -72,8 +72,9 @@ def main(argv):
         print(terms)
 
         start_time=time.time()
-        model_directory = os.path.join(base_path,'models/ModelDenseNet201')
-        model_name = 'densenet201weights.best.hdf5'
+#         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
+        model_directory = base_path
+        model_name = 'densenet201weights.best.h5'
         # model_name = 'weights.best.hdf5'
         print(model_directory +'/'+ model_name)
         print('Loading model.....')
