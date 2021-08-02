@@ -3,7 +3,7 @@ S_classify_NWMS_ER_DenseNet201
 
 Trained using 3333 nuclei based on validation by collaborative pathologists.
 
-Model layers:
+DenseNet201 model layers:
 
 global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
 dense_layer = tf.keras.layers.Dense(1920, activation='relu')
