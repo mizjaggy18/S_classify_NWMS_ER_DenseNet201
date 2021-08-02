@@ -32,7 +32,7 @@ from tifffile import imread
 from cytomine import Cytomine, models, CytomineJob
 from cytomine.models import Annotation, AnnotationTerm, AnnotationCollection, ImageInstanceCollection, Job, Project, ImageInstance, Property
 from cytomine.models.ontology import Ontology, OntologyCollection, Term, RelationTerm, TermCollection
-from cytomine.models.property import TagDomainAssociation, Tag, TagCollection, PropertyCollection
+from cytomine.models.property import Tag, TagCollection, PropertyCollection
 from cytomine.utilities.software import parse_domain_list, str2bool, setup_classify, stringify
 
 
