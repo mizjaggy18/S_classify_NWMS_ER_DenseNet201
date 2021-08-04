@@ -79,7 +79,7 @@ def main(argv):
         print(model_directory +'/'+ model_name)
         print('Loading model.....')
 #         model = tf.keras.models.load_model(model_directory +'/'+ model_name)
-        model = tf.saved_model.load(model_directory +'/'+ model_name)
+        model = tf.saved_model.load(model_name)
         print('Model successfully loaded!')
         IMAGE_CLASSES = ['c0', 'c1', 'c2', 'c3']
         IMAGE_WIDTH, IMAGE_HEIGHT = (224, 224)
