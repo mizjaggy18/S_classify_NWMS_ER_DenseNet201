@@ -37,8 +37,8 @@ from cytomine.models.ontology import Ontology, OntologyCollection, Term, Relatio
 
 
 from PIL import Image
-from tf.keras.preprocessing import image
-from tf.keras.applications.densenet import DenseNet201
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications.densenet import DenseNet201
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
