@@ -79,7 +79,7 @@ def main(argv):
         # model_name = 'weights.best.hdf5'
         print(model_directory +'/'+ model_name)
         print('Loading model.....')
-        model = tf.keras.models.load_model(model_directory +'/'+ model_name)
+        model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
 #         model = tf.keras.models.load_model(model_name)
 #         model = tf.saved_model.load(model_name)
         print('Model successfully loaded!')
@@ -162,9 +162,11 @@ def main(argv):
                 arr = tf.keras.preprocessing.image.img_to_array(img)
                 arr = np.expand_dims(arr, axis=0)
                 arr /= 255
-                predictions.append(model.predict(arr))
-
-                pred_labels = np.argmax(predictions, axis=-1)
+#                 predictions.append(model.predict(arr))
+#                 pred_labels = np.argmax(predictions, axis=-1)
+                predictions = model.predict(arr)
+                pred_labels = predictions
+                
                 print(pred_labels)
                 # roi_class_path=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png')
 
