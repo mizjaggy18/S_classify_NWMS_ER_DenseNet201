@@ -73,13 +73,14 @@ def main(argv):
 
         start_time=time.time()
 #         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
-        model_directory = base_path
+#         model_directory = base_path
+        model_directory = '/models/ModelDenseNet201'
         model_name = 'densenet201weights.best.h5'
         # model_name = 'weights.best.hdf5'
         print(model_directory +'/'+ model_name)
         print('Loading model.....')
-#         model = tf.keras.models.load_model(model_directory +'/'+ model_name)
-        model = tf.keras.models.load_model(model_name)
+        model = tf.keras.models.load_model(model_directory +'/'+ model_name)
+#         model = tf.keras.models.load_model(model_name)
 #         model = tf.saved_model.load(model_name)
         print('Model successfully loaded!')
         IMAGE_CLASSES = ['c0', 'c1', 'c2', 'c3']
