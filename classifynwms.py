@@ -159,13 +159,13 @@ def main(argv):
 
                 # im=Image.open(roi_png_filename)
                 img = tf.keras.preprocessing.image.load_img(roi_png_filename, target_size=(IMAGE_WIDTH, IMAGE_HEIGHT))
-                arr = tf.keras.preprocessing.image.img_to_array(img)
-                arr = np.expand_dims(arr, axis=0)
-                arr /= 255
-#                 predictions.append(model.predict(arr))
-#                 pred_labels = np.argmax(predictions, axis=-1)
-                predictions = model.predict(arr)
-                pred_labels = predictions
+                im_arr = tf.keras.preprocessing.image.img_to_array(img)
+                im_arr = np.expand_dims(im_arr, axis=0)
+                im_arr /= 255
+                predictions.append(model.predict(im_arr))
+                pred_labels = np.argmax(predictions, axis=-1)
+#                 predictions = model.predict(im_arr)
+#                 pred_labels = predictions
                 
                 print(pred_labels)
                 # roi_class_path=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png')
