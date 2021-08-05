@@ -53,7 +53,7 @@ import logging
 
 
 __author__ = "WSH Munirah W Ahmad <wshmunirah@gmail.com>"
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 # Date created: 03 June 2021
 
 
@@ -164,54 +164,51 @@ def main(argv):
                 arr /= 255
                 predictions.append(model.predict(arr))
 
-                pred_labels = np.argmax(predictions, axis=-1)
-
+            pred_labels = np.argmax(predictions, axis=-1)
                 # roi_class_path=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png')
 
-
-
-                if pred_labels[i][0]==0:
-                    print("Class 0: Negative")
-                    id_terms=conn.parameters.cytomine_id_c0_term
-                    # roi.dump(dest_pattern=os.path.join(roi_path+'Class0/'+str(roi.id)+'.png'),alpha=True)
-                elif pred_labels[i][0]==1:
-                    print("Class 1: Weak")
-                    id_terms=conn.parameters.cytomine_id_c1_term
-                    # roi.dump(dest_pattern=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png'),alpha=True)
-                elif pred_labels[i][0]==2:
-                    print("Class 2: Moderate")
-                    id_terms=conn.parameters.cytomine_id_c2_term
-                    # roi.dump(dest_pattern=os.path.join(roi_path+'Class2/'+str(roi.id)+'.png'),alpha=True)
-                elif pred_labels[i][0]==3:
-                    print("Class 3: Strong")
-                    id_terms=conn.parameters.cytomine_id_c3_term
-                    # roi.dump(dest_pattern=os.path.join(roi_path+'Class3/'+str(roi.id)+'.png'),alpha=True)
+            if pred_labels[i][0]==0:
+                print("Class 0: Negative")
+                id_terms=conn.parameters.cytomine_id_c0_term
+                # roi.dump(dest_pattern=os.path.join(roi_path+'Class0/'+str(roi.id)+'.png'),alpha=True)
+            elif pred_labels[i][0]==1:
+                print("Class 1: Weak")
+                id_terms=conn.parameters.cytomine_id_c1_term
+                # roi.dump(dest_pattern=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png'),alpha=True)
+            elif pred_labels[i][0]==2:
+                print("Class 2: Moderate")
+                id_terms=conn.parameters.cytomine_id_c2_term
+                # roi.dump(dest_pattern=os.path.join(roi_path+'Class2/'+str(roi.id)+'.png'),alpha=True)
+            elif pred_labels[i][0]==3:
+                print("Class 3: Strong")
+                id_terms=conn.parameters.cytomine_id_c3_term
+                # roi.dump(dest_pattern=os.path.join(roi_path+'Class3/'+str(roi.id)+'.png'),alpha=True)
                   
 
-                cytomine_annotations = AnnotationCollection()
+            cytomine_annotations = AnnotationCollection()
 
-                annotation=roi_geometry
+            annotation=roi_geometry
 
-                # tags.append(TagDomainAssociation(Annotation().fetch(id_image, tag.id))).save()
+            # tags.append(TagDomainAssociation(Annotation().fetch(id_image, tag.id))).save()
 
-                # association = append(TagDomainAssociation(Annotation().fetch(id_image, tag.id))).save()
-                # print(association)
+            # association = append(TagDomainAssociation(Annotation().fetch(id_image, tag.id))).save()
+            # print(association)
 
 
-                cytomine_annotations.append(Annotation(location=annotation.wkt,#location=roi_geometry,
-                                                       id_image=id_image,#conn.parameters.cytomine_id_image,
-                                                       id_project=conn.parameters.cytomine_id_project,
-                                                       id_terms=[id_terms]))
-                print(".",end = '',flush=True)
+            cytomine_annotations.append(Annotation(location=annotation.wkt,#location=roi_geometry,
+                                                   id_image=id_image,#conn.parameters.cytomine_id_image,
+                                                   id_project=conn.parameters.cytomine_id_project,
+                                                   id_terms=[id_terms]))
+            print(".",end = '',flush=True)
 
-                #Send Annotation Collection (for this ROI) to Cytomine server in one http request
-                ca = cytomine_annotations.save()
+            #Send Annotation Collection (for this ROI) to Cytomine server in one http request
+            ca = cytomine_annotations.save()
 
-            end_time=time.time()
-            print("Execution time: ",end_time-start_time)
-            print("Prediction time: ",end_time-start_prediction_time)
+        end_time=time.time()
+        print("Execution time: ",end_time-start_time)
+        print("Prediction time: ",end_time-start_prediction_time)
 
-        conn.job.update(status=Job.TERMINATED, progress=100, statusComment="Finished.")
+    conn.job.update(status=Job.TERMINATED, progress=100, statusComment="Finished.")
 
 if __name__ == "__main__":
     main(sys.argv[1:])
