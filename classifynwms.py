@@ -163,7 +163,7 @@ def main(argv):
                 im_arr = np.expand_dims(im_arr, axis=0)
                 im_arr /= 255
                 predictions.append(model.predict(im_arr))
-                pred_labels = np.argmax(predictions, axis=-1)
+                pred_labels = np.argmax(predictions, axis=1)
 #                 predictions = model.predict(im_arr)
 #                 pred_labels = predictions
                 
