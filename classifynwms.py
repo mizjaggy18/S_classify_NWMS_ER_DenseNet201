@@ -162,10 +162,11 @@ def main(argv):
                 im_arr = tf.keras.preprocessing.image.img_to_array(img)
                 im_arr = np.expand_dims(im_arr, axis=0)
                 im_arr /= 255
+                print(model.predict(im_arr))
                 predictions.append(model.predict(im_arr))
-                pred_labels = np.argmax(predictions, axis=1)
+#                 pred_labels = np.argmax(predictions, axis=1)
 #                 predictions = model.predict(im_arr)
-#                 pred_labels = predictions
+                pred_labels = model.predict(im_arr)
                 
                 print(pred_labels)
                 # roi_class_path=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png')
