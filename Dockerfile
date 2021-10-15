@@ -28,8 +28,8 @@ RUN mkdir -p /models && \
     cd /models && \
     mkdir -p ModelDenseNet201
 
-ADD densenet201weights.best.h5 /models/ModelDenseNet201/densenet201weights.best.h5
-RUN chmod 444 /models/ModelDenseNet201/densenet201weights.best.h5
+ADD model_quant_f16.tflite /models/ModelDenseNet201/model_quant_f16.tflite
+RUN chmod 444 /models/ModelDenseNet201/model_quant_f16.tflite
 
 
 # Install scripts
