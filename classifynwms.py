@@ -32,13 +32,13 @@ from tifffile import imread
 from cytomine import Cytomine, models, CytomineJob
 from cytomine.models import Annotation, AnnotationTerm, AnnotationCollection, ImageInstanceCollection, Job, Project, ImageInstance, Property
 from cytomine.models.ontology import Ontology, OntologyCollection, Term, RelationTerm, TermCollection
-from cytomine.models.property import TagDomainAssociation, Tag, TagCollection, PropertyCollection
-from cytomine.utilities.software import parse_domain_list, str2bool, setup_classify, stringify
+# from cytomine.models.property import Tag, TagCollection, PropertyCollection
+# from cytomine.utilities.software import parse_domain_list, str2bool, setup_classify, stringify
 
 
 from PIL import Image
-from keras.preprocessing import image
-from keras.applications.densenet import DenseNet201
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications.densenet import DenseNet201
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -53,8 +53,8 @@ import logging
 
 
 __author__ = "WSH Munirah W Ahmad <wshmunirah@gmail.com>"
-__version__ = "0.1.0"
-# Date created: 03 June 2021
+__version__ = "1.0.0"
+# Date created: 03 June 2021 (modified on 15 Oct 2021 for prune)
 
 
 def main(argv):
@@ -72,12 +72,24 @@ def main(argv):
         print(terms)
 
         start_time=time.time()
-        model_directory = os.path.join(base_path,'models/ModelDenseNet201')
-        model_name = 'densenet201weights.best.hdf5'
+
+#         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
+#         model_directory = base_path
+        model_directory = '/models/ModelDenseNet201'
+
+        # model_name = 'densenet201weights.best.h5'
+        model_name = 'model_quant_f16.tflite'
+
         # model_name = 'weights.best.hdf5'
         print(model_directory +'/'+ model_name)
         print('Loading model.....')
-        model = tf.keras.models.load_model(model_directory +'/'+ model_name)
+
+        # model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
+#         model = tf.keras.models.load_model(model_name)
+#         model = tf.saved_model.load(model_name)
+        model_interpreter = tf.lite.Interpreter(model_path=model_directory +'/'+ model_name)
+        model_interpreter.allocate_tensors()
+
         print('Model successfully loaded!')
         IMAGE_CLASSES = ['c0', 'c1', 'c2', 'c3']
         IMAGE_WIDTH, IMAGE_HEIGHT = (224, 224)
@@ -101,11 +113,13 @@ def main(argv):
             list_imgs = [int(id_img) for id_img in conn.parameters.cytomine_id_images.split(',')]
             print(list_imgs)
 
+
+
         #Go over images
         conn.job.update(status=Job.RUNNING, progress=10, statusComment="Running PN classification on image...")
         #for id_image in conn.monitor(list_imgs, prefix="Running PN classification on image", period=0.1):
         for id_image in list_imgs:
-
+            print('Current image:', id_image)
             roi_annotations = AnnotationCollection()
             roi_annotations.project = conn.parameters.cytomine_id_project
             roi_annotations.term = conn.parameters.cytomine_id_cell_term
@@ -129,6 +143,12 @@ def main(argv):
 
             start_prediction_time=time.time()
             predictions = []
+            img_all = []
+            pred_all = []
+            pred_c0 = 0
+            pred_c1 = 0
+            pred_c2 = 0
+            pred_c3 = 0
 
             #Go over ROI in this image
             #for roi in conn.monitor(roi_annotations, prefix="Running detection on ROI", period=0.1):
@@ -151,20 +171,40 @@ def main(argv):
                 conn.job.update(status=Job.RUNNING, progress=20, statusComment=roi_png_filename)
                 print("roi_png_filename: %s" %roi_png_filename)
                 roi.dump(dest_pattern=roi_png_filename,alpha=True)
+#                 roi.dump(dest_pattern=roi_png_filename, mask=True, alpha=True)
                 #roi.dump(dest_pattern=os.path.join(roi_path,"{id}.png"), mask=True, alpha=True)
 
                 # im=Image.open(roi_png_filename)
-                img = tf.keras.preprocessing.image.load_img(roi_png_filename, target_size=(IMAGE_WIDTH, IMAGE_HEIGHT))
-                arr = tf.keras.preprocessing.image.img_to_array(img)
-                arr = np.expand_dims(arr, axis=0)
-                arr /= 255
-                predictions.append(model.predict(arr))
+
+                # img = tf.keras.preprocessing.image.load_img(roi_png_filename, target_size=(IMAGE_WIDTH, IMAGE_HEIGHT))
+                # im_arr = tf.keras.preprocessing.image.img_to_array(img)
+                im = cv2.imread(roi_png_filename).astype('float32')
+                im_arr = np.array(im)
+                im_arr = cv2.cvtColor(im_arr, cv2.COLOR_BGR2RGB)
+                im_arr = cv2.resize(im_arr, (224, 224))
+                im_arr = np.expand_dims(im_arr, axis=0)
+                # im_arr /= 255
+
+
+                input_index = model_interpreter.get_input_details()[0]["index"]
+                output_index = model_interpreter.get_output_details()[0]["index"]
+
+                model_interpreter.set_tensor(input_index, im_arr)
+                model_interpreter.invoke()
+                predictions = model_interpreter.get_tensor(output_index)
+                print("Prediction:", predictions)
 
                 pred_labels = np.argmax(predictions, axis=-1)
+                print("PredLabels:", pred_labels)
+
+                img_all.append(roi_png_filename)
+                # print(img_all)
+                
+                
+                pred_all.append(pred_labels)
+                print(pred_all)
 
                 # roi_class_path=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png')
-
-
 
                 if pred_labels[i][0]==0:
                     print("Class 0: Negative")
@@ -182,7 +222,7 @@ def main(argv):
                     print("Class 3: Strong")
                     id_terms=conn.parameters.cytomine_id_c3_term
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class3/'+str(roi.id)+'.png'),alpha=True)
-                  
+
 
                 cytomine_annotations = AnnotationCollection()
 
@@ -203,11 +243,17 @@ def main(argv):
                 #Send Annotation Collection (for this ROI) to Cytomine server in one http request
                 ca = cytomine_annotations.save()
 
-            end_time=time.time()
-            print("Execution time: ",end_time-start_time)
-            print("Prediction time: ",end_time-start_prediction_time)
+            pred_all=[pred_c0, pred_c1, pred_c2, pred_c3]
+            pred_100=[]
+            print("pred_all:", pred_all)
+            im_pred = np.argmax(pred_all)
+            print("image prediction:", im_pred)
 
-        conn.job.update(status=Job.TERMINATED, progress=100, statusComment="Finished.")
+        end_time=time.time()
+        print("Execution time: ",end_time-start_time)
+        print("Prediction time: ",end_time-start_prediction_time)
+
+    conn.job.update(status=Job.TERMINATED, progress=100, statusComment="Finished.")
 
 if __name__ == "__main__":
     main(sys.argv[1:])
