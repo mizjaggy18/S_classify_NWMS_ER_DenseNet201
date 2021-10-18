@@ -89,7 +89,7 @@ def main(argv):
 #         model = tf.saved_model.load(model_name)
 
 #         model_interpreter = tf.lite.Interpreter(model_path=model_directory +'/'+ model_name)
-        model_interpreter = tf.lite.Interpreter(model_path="model_quant_f16.tflite")
+        model_interpreter = tf.lite.Interpreter(model_path='model_quant_f16.tflite')
         model_interpreter.allocate_tensors()
 
         print('Model successfully loaded!')
