@@ -23,6 +23,7 @@ RUN pip install matplotlib
 RUN pip install numpy
 RUN pip install shapely
 RUN pip install tifffile
+RUN pip install pathlib
 
 # RUN mkdir -p /models && \
 #     cd /models && \
