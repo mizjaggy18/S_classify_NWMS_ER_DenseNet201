@@ -49,6 +49,7 @@ import math
 import argparse
 import json
 import logging
+import pathlib
 
 
 
@@ -75,10 +76,11 @@ def main(argv):
 
 #         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
 #         model_directory = base_path
-        model_directory = '/models/ModelDenseNet201'
+#         model_directory = '/models/ModelDenseNet201'
 
         # model_name = 'densenet201weights.best.h5'
-        model_name = 'model_quant_f16.tflite'
+        model_dir = pathlib.Path("weights_float16/")
+        model_file = model_dir/"model_quant_f16.tflite"
 
         # model_name = 'weights.best.hdf5'
         print(model_directory +'/'+ model_name)
@@ -89,7 +91,7 @@ def main(argv):
 #         model = tf.saved_model.load(model_name)
 
 #         model_interpreter = tf.lite.Interpreter(model_path=model_directory +'/'+ model_name)
-        model_interpreter = tf.lite.Interpreter(model_path='model_quant_f16.tflite')
+        model_interpreter = tf.lite.Interpreter(model_path=str(model_file))
         model_interpreter.allocate_tensors()
 
         print('Model successfully loaded!')
