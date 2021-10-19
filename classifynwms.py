@@ -83,7 +83,7 @@ def main(argv):
         model_file = model_dir/"model_quant_f16.tflite"
 
         # model_name = 'weights.best.hdf5'
-        print(model_directory +'/'+ model_name)
+#         print(model_directory +'/'+ model_name)
         print('Loading model.....')
 
         # model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
