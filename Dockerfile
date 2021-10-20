@@ -32,16 +32,16 @@ RUN pip install pathlib
 # ADD model_quant_f16.tflite /models/ModelDenseNet201/model_quant_f16.tflite
 # RUN chmod 444 /models/ModelDenseNet201/model_quant_f16.tflite
 
-RUN mkdir -p /weights_float16 && \
-    cd /weights_float16
+# RUN mkdir -p /weights_float16 && \
+#     cd /weights_float16
     
-ADD model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
-RUN chmod 444 /weights_float16/model_quant_f16.tflite
+# ADD model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
+# RUN chmod 444 /weights_float16/model_quant_f16.tflite
 
 # Install scripts
 ADD descriptor.json /app/descriptor.json
 RUN mkdir -p /app
 ADD classifynwms.py /app/classifynwms.py
-# ADD model_quant_f16.tflite /app/model_quant_f16.tflite
+ADD model_quant_f16.tflite /app/model_quant_f16.tflite
 
 ENTRYPOINT ["python", "/app/classifynwms.py"]
