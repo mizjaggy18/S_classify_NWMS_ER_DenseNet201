@@ -75,7 +75,7 @@ def main(argv):
         start_time=time.time()
 
 #         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
-        model_directory = base_path
+        model_directory = working_path
 #         model_directory = '/models/ModelDenseNet201'
 
         # model_name = 'densenet201weights.best.h5'
