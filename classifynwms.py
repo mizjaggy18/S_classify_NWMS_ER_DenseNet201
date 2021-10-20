@@ -81,8 +81,8 @@ def main(argv):
         # model_name = 'densenet201weights.best.h5'
         model_dir = pathlib.Path("weights_float16/")
 #         
-        print('current working dir:',pathlib.Path.cwd())
-        model_dir = pathlib.Path.cwd()
+#        print('current working dir:',pathlib.Path.cwd())
+#        model_dir = pathlib.Path.cwd()
 #         model_file = pathlib.Path("model_quant_f16.tflite")
         model_file = model_dir/"model_quant_f16.tflite"
 #         model_name = 'model_quant_f16.tflite'
