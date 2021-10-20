@@ -84,7 +84,7 @@ def main(argv):
 #        print('current working dir:',pathlib.Path.cwd())
 #        model_dir = pathlib.Path.cwd()
 #         model_file = pathlib.Path("model_quant_f16.tflite")
-        model_file = model_dir/"model_quant_f16.tflite"
+        model_file = "model_quant_f16.tflite"
 #         model_name = 'model_quant_f16.tflite'
 
         # model_name = 'weights.best.hdf5'
