@@ -79,7 +79,7 @@ def main(argv):
 #         model_directory = '/models/ModelDenseNet201'
 
         # model_name = 'densenet201weights.best.h5'
-        model_dir = pathlib.Path("weights_float16")
+        model_dir = pathlib.Path("../weights_float16/")
 #         
 #        print('current working dir:',pathlib.Path.cwd())
 #        model_dir = pathlib.Path.cwd()
