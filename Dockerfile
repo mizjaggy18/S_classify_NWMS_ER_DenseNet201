@@ -35,7 +35,7 @@ RUN pip install pathlib
 RUN mkdir -p /weights_float16 && \
     cd /weights_float16 
     
-ADD model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
+ADD /weights_float16/model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
 RUN chmod 444 /weights_float16/model_quant_f16.tflite
 
 # Install scripts
