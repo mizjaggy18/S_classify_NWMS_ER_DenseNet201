@@ -252,12 +252,52 @@ def main(argv):
                 #Send Annotation Collection (for this ROI) to Cytomine server in one http request
                 ca = cytomine_annotations.save()
 
+            # print("prediction all:", pred_all)
+            # print(pred_labels)
+
+            # print("prediction c0:", pred_c0)
+            # print("prediction c1:", pred_c1)
+            # print("prediction c2:", pred_c2)
+            # print("prediction c3:", pred_c3)
             pred_all=[pred_c0, pred_c1, pred_c2, pred_c3]
-            pred_100=[]
             print("pred_all:", pred_all)
             im_pred = np.argmax(pred_all)
             print("image prediction:", im_pred)
+            pred_total=pred_c0+pred_c1+pred_c2+pred_c3
+            print("pred_total:",pred_total)
+            pred_positive=pred_c1+pred_c2+pred_c3
+            print("pred_positive:",pred_positive)
+            pred_positive_100=pred_positive/pred_total*100
+            print("pred_positive_100:",pred_positive_100)
 
+            if pred_positive_100 == 0:
+                proportion_score = 0
+            elif pred_positive_100 < 1:
+                proportion_score = 1
+            elif pred_positive_100 >= 1 and pred_positive_100 <= 10:
+                proportion_score = 2
+            elif pred_positive_100 >= 11 and pred_positive_100 <= 33:
+                proportion_score = 3
+            elif pred_positive_100 >= 34 and pred_positive_100 <= 66:
+                proportion_score = 4
+            elif pred_positive_100 >= 67:
+                proportion_score = 5
+
+            if pred_positive_100 == 0:
+                intensity_score = 0
+            elif im_pred == 1:
+                intensity_score = 1
+            elif im_pred == 2:
+                intensity_score = 2
+            elif im_pred == 3:
+                intensity_score = 3
+
+            allred_score = proportion_score + intensity_score
+            print('Proportion Score: ',proportion_score)
+            print('Intensity Score: ',intensity_score)            
+            print('Allred Score: ',allred_score)
+            
+            
         end_time=time.time()
         print("Execution time: ",end_time-start_time)
         print("Prediction time: ",end_time-start_prediction_time)
