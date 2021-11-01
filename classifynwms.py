@@ -27,8 +27,6 @@ from shapely import wkt
 from glob import glob
 from tifffile import imread
 #from csbdeep.utils import Path, normalize
-#from stardist import random_label_cmap
-#from stardist.models import StarDist2D
 from cytomine import Cytomine, models, CytomineJob
 from cytomine.models import Annotation, AnnotationTerm, AnnotationCollection, ImageInstanceCollection, Job, Project, ImageInstance, Property
 from cytomine.models.ontology import Ontology, OntologyCollection, Term, RelationTerm, TermCollection
@@ -39,6 +37,8 @@ from cytomine.models.ontology import Ontology, OntologyCollection, Term, Relatio
 from PIL import Image
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.densenet import DenseNet201
+pretrained_model = DenseNet201(input_shape=(224, 224, 3), include_top=False, weights='imagenet')
+pretrained_model.trainable = False
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
