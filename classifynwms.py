@@ -111,7 +111,7 @@ def main(argv):
 #         model_file = model_dir/"model_quant_f16.tflite"
 #         model_name = 'model_quant_f16.tflite'
 
-        model_name = 'weights.best_v10b_100ep_cc_LR_01val.h5'
+        model_name = 'weights.best.h5'
         print(model_directory +'/'+ model_name)
         print('Loading model.....')
         model = densemodel()
