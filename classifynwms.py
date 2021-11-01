@@ -57,6 +57,30 @@ __author__ = "WSH Munirah W Ahmad <wshmunirah@gmail.com>"
 __version__ = "1.0.0"
 # Date created: 03 June 2021 (modified on 15 Oct 2021 for prune)
 
+def densemodel():
+    data_augmentation = tf.keras.Sequential([
+        tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
+        tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
+        tf.keras.layers.experimental.preprocessing.RandomZoom(0.2),
+    ])
+    tensor = tf.keras.Input((224, 224, 3))
+    x = tf.cast(tensor, tf.float32)
+    x = tf.keras.applications.densenet.preprocess_input(
+        x, data_format=None)
+    x = data_augmentation(x)
+    x = pretrained_model(x, training=False)
+    x = tf.keras.layers.Flatten()(x)
+    x = tf.keras.layers.Dense(256)(x)
+    x = tf.nn.relu(x)
+    x = tf.keras.layers.Dropout(0.4)(x)
+    x = tf.keras.layers.Dense(4)(x)
+    x = tf.nn.softmax(x)
+    model = tf.keras.Model(tensor, x)
+    model.compile(optimizer=tf.keras.optimizers.Adam(),
+                  loss=tf.keras.losses.CategoricalCrossentropy(),
+                  metrics=['accuracy'])
+    return model
+
 
 def main(argv):
     with CytomineJob.from_cli(argv) as conn:
@@ -76,28 +100,31 @@ def main(argv):
 
 #         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
 #         model_directory = working_path
-#         model_directory = '/models/ModelDenseNet201'
+        model_directory = '/models/ModelDenseNet201'
 
         # model_name = 'densenet201weights.best.h5'
-        model_dir = pathlib.Path("weights_float16/")
+#         model_dir = pathlib.Path("weights_float16/")
 #         
 #        print('current working dir:',pathlib.Path.cwd())
 #        model_dir = pathlib.Path.cwd()
 #         model_file = pathlib.Path("model_quant_f16.tflite")
-        model_file = model_dir/"model_quant_f16.tflite"
+#         model_file = model_dir/"model_quant_f16.tflite"
 #         model_name = 'model_quant_f16.tflite'
 
-        # model_name = 'weights.best.hdf5'
-#         print(model_directory +'/'+ model_name)
+        model_name = 'weights.best_v10b_100ep_cc_LR_01val.h5'
+        print(model_directory +'/'+ model_name)
         print('Loading model.....')
-
+        model = densemodel()
+        model.load_weights(model_directory +'/'+ model_name)
+        
         # model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
 #         model = tf.keras.models.load_model(model_name)
 #         model = tf.saved_model.load(model_name)
 
 #         model_interpreter = tf.lite.Interpreter(model_path=model_directory +'/'+ model_name)
-        model_interpreter = tf.lite.Interpreter(model_path=str(model_file))
-        model_interpreter.allocate_tensors()
+#         model_interpreter = tf.lite.Interpreter(model_path=str(model_file))
+#         model_interpreter.allocate_tensors()
+        
 
         print('Model successfully loaded!')
         IMAGE_CLASSES = ['c0', 'c1', 'c2', 'c3']
@@ -187,7 +214,8 @@ def main(argv):
 
                 # img = tf.keras.preprocessing.image.load_img(roi_png_filename, target_size=(IMAGE_WIDTH, IMAGE_HEIGHT))
                 # im_arr = tf.keras.preprocessing.image.img_to_array(img)
-                im = cv2.imread(roi_png_filename).astype('float32')
+#                 im = cv2.imread(roi_png_filename).astype('float32')
+                im = cv2.imread(roi_png_filename)
                 im_arr = np.array(im)
                 im_arr = cv2.cvtColor(im_arr, cv2.COLOR_BGR2RGB)
                 im_arr = cv2.resize(im_arr, (224, 224))
@@ -195,17 +223,19 @@ def main(argv):
                 # im_arr /= 255
 
 
-                input_index = model_interpreter.get_input_details()[0]["index"]
-                output_index = model_interpreter.get_output_details()[0]["index"]
+#                 input_index = model_interpreter.get_input_details()[0]["index"]
+#                 output_index = model_interpreter.get_output_details()[0]["index"]
 
-                model_interpreter.set_tensor(input_index, im_arr)
-                model_interpreter.invoke()
-                predictions = model_interpreter.get_tensor(output_index)
+#                 model_interpreter.set_tensor(input_index, im_arr)
+#                 model_interpreter.invoke()
+#                 predictions = model_interpreter.get_tensor(output_index)
+                predictions.append(model.predict(im_arr))
+                pred_labels = np.argmax(predictions, axis=-1)
+        
                 print("Prediction:", predictions)
 
                 pred_labels = np.argmax(predictions, axis=-1)
-                print("PredLabels:", pred_labels)
-
+                print("PredLabels:", pred_labels)            
                 img_all.append(roi_png_filename)
                 # print(img_all)
                 
@@ -218,18 +248,22 @@ def main(argv):
                 if pred_labels[i][0]==0:
                     print("Class 0: Negative")
                     id_terms=conn.parameters.cytomine_id_c0_term
+                    pred_c0=pred_c0+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class0/'+str(roi.id)+'.png'),alpha=True)
                 elif pred_labels[i][0]==1:
                     print("Class 1: Weak")
                     id_terms=conn.parameters.cytomine_id_c1_term
+                    pred_c1=pred_c1+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png'),alpha=True)
                 elif pred_labels[i][0]==2:
                     print("Class 2: Moderate")
                     id_terms=conn.parameters.cytomine_id_c2_term
+                    pred_c2=pred_c2+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class2/'+str(roi.id)+'.png'),alpha=True)
                 elif pred_labels[i][0]==3:
                     print("Class 3: Strong")
                     id_terms=conn.parameters.cytomine_id_c3_term
+                    pred_c3=pred_c3+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class3/'+str(roi.id)+'.png'),alpha=True)
 
 
