@@ -25,12 +25,12 @@ RUN pip install shapely
 RUN pip install tifffile
 RUN pip install pathlib
 
-RUN mkdir -p /models && \
-    cd /models && \
-    mkdir -p ModelDenseNet201
+# RUN mkdir -p /models && \
+#     cd /models && \
+#     mkdir -p ModelDenseNet201
 
-ADD weights.best.h5 /models/ModelDenseNet201/weights.best.h5
-RUN chmod 444 /models/ModelDenseNet201/weights.best.h5
+# ADD weights.best.h5 /models/ModelDenseNet201/weights.best.h5
+# RUN chmod 444 /models/ModelDenseNet201/weights.best.h5
 
 # RUN mkdir -p /weights_float16     
 # ADD /weights_float16/model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
@@ -40,6 +40,6 @@ RUN chmod 444 /models/ModelDenseNet201/weights.best.h5
 ADD descriptor.json /app/descriptor.json
 RUN mkdir -p /app
 ADD classifynwms.py /app/classifynwms.py
-# ADD model_quant_f16.tflite /app/model_quant_f16.tflite
+ADD weights.best.h5 /app/weights.best.h5
 
 ENTRYPOINT ["python", "/app/classifynwms.py"]
