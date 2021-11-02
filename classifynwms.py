@@ -106,17 +106,22 @@ def main(argv):
 #         model_dir = pathlib.Path("weights_float16/")
 #         
 #        print('current working dir:',pathlib.Path.cwd())
-#        model_dir = pathlib.Path.cwd()
+       model_dir = pathlib.Path.cwd()
+       model_name = 'weights.best.h5'
 #         model_file = pathlib.Path("model_quant_f16.tflite")
 #         model_file = model_dir/"model_quant_f16.tflite"
+       model_file = model_dir/model_name
 #         model_name = 'model_quant_f16.tflite'
 
-        model_name = 'weights.best.h5'
+        
 #         print(model_directory +'/'+ model_name)
         print('Loading model.....')
+        print(model_file)
         model = densemodel()
+        model.load_weights(model_file)
 #         model.load_weights(model_directory +'/'+ model_name)
-        model.load_weights(working_path +'/'+ model_name)
+#         model.load_weights(working_path +'/'+ model_name)
+
         
         # model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
 #         model = tf.keras.models.load_model(model_name)
