@@ -45,6 +45,8 @@ RUN pip install pathlib
 
 RUN mkdir /app
 WORKDIR /app
-COPY ..
+COPY descriptor.json /app/
+COPY classifynwms.py /app/
+COPY weights.best.h5 /app/
 CMD ["python","classifynwms.py"]
 
