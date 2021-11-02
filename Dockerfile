@@ -18,7 +18,6 @@ FROM cytomine/software-python3-base
 RUN apt-get update
 RUN pip install tensorflow==2.5.0
 RUN pip install keras
-# RUN pip install time
 RUN pip install matplotlib
 RUN pip install numpy
 RUN pip install shapely
@@ -37,9 +36,15 @@ RUN pip install pathlib
 # RUN chmod 444 /weights_float16/model_quant_f16.tflite
 
 # Install scripts
-ADD descriptor.json /app/descriptor.json
-RUN mkdir -p /app
-ADD classifynwms.py /app/classifynwms.py
-ADD weights.best.h5 /app/weights.best.h5
+# ADD descriptor.json /app/descriptor.json
+# RUN mkdir -p /app
+# ADD classifynwms.py /app/classifynwms.py
+# ADD weights.best.h5 /app/weights.best.h5
 
-ENTRYPOINT ["python", "/app/classifynwms.py"]
+# ENTRYPOINT ["python", "/app/classifynwms.py"]
+
+RUN mkdir /app
+WORKDIR /app
+COPY ..
+CMD ["python","classifynwms.py"]
+
