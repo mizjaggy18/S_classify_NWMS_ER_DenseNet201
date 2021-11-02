@@ -100,7 +100,7 @@ def main(argv):
 
 #         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
 #         model_directory = working_path
-        model_directory = '/models/ModelDenseNet201'
+#         model_directory = '/models/ModelDenseNet201'
 
         # model_name = 'densenet201weights.best.h5'
 #         model_dir = pathlib.Path("weights_float16/")
@@ -112,10 +112,11 @@ def main(argv):
 #         model_name = 'model_quant_f16.tflite'
 
         model_name = 'weights.best.h5'
-        print(model_directory +'/'+ model_name)
+#         print(model_directory +'/'+ model_name)
         print('Loading model.....')
         model = densemodel()
-        model.load_weights(model_directory +'/'+ model_name)
+#         model.load_weights(model_directory +'/'+ model_name)
+        model.load_weights(model_name)
         
         # model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
 #         model = tf.keras.models.load_model(model_name)
