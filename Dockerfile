@@ -46,5 +46,5 @@ RUN pip install pathlib
 RUN mkdir /app
 COPY . .
 WORKDIR /app
-CMD ["python","classifynwms.py"]
+ENTRYPOINT ["python","classifynwms.py"]
 
