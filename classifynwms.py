@@ -106,11 +106,11 @@ def main(argv):
 #         model_dir = pathlib.Path("weights_float16/")
 #         
 #        print('current working dir:',pathlib.Path.cwd())
-       model_dir = pathlib.Path.cwd()
-       model_name = 'weights.best.h5'
+        model_dir = pathlib.Path.cwd()
+        model_name = 'weights.best.h5'
 #         model_file = pathlib.Path("model_quant_f16.tflite")
-#         model_file = model_dir/"model_quant_f16.tflite"
-       model_file = model_dir/model_name
+#         model_file = model_dir/"model_quant_f16.tflite"  
+        model_file = model_dir/model_name
 #         model_name = 'model_quant_f16.tflite'
 
         
