@@ -22,29 +22,29 @@ RUN pip install matplotlib
 RUN pip install numpy
 RUN pip install shapely
 RUN pip install tifffile
-RUN pip install pathlib
+# RUN pip install pathlib
 
-# RUN mkdir -p /models && \
-#     cd /models && \
-#     mkdir -p ModelDenseNet201
+RUN mkdir -p /models && \
+    cd /models && \
+    mkdir -p ModelDenseNet201
 
-# ADD weights.best.h5 /models/ModelDenseNet201/weights.best.h5
-# RUN chmod 444 /models/ModelDenseNet201/weights.best.h5
+ADD weights.best.h5 /models/ModelDenseNet201/weights.best.h5
+RUN chmod 444 /models/ModelDenseNet201/weights.best.h5
 
 # RUN mkdir -p /weights_float16     
 # ADD /weights_float16/model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
 # RUN chmod 444 /weights_float16/model_quant_f16.tflite
 
 # Install scripts
-# ADD descriptor.json /app/descriptor.json
-# RUN mkdir -p /app
-# ADD classifynwms.py /app/classifynwms.py
+ADD descriptor.json /app/descriptor.json
+RUN mkdir -p /app
+ADD classifynwms.py /app/classifynwms.py
 # ADD weights.best.h5 /app/weights.best.h5
 
-# ENTRYPOINT ["python", "/app/classifynwms.py"]
+ENTRYPOINT ["python", "/app/classifynwms.py"]
 
-RUN mkdir /app
-COPY . .
-WORKDIR /app
-ENTRYPOINT ["python","/app/classifynwms.py"]
+# RUN mkdir /app
+# COPY . .
+# WORKDIR /app
+# ENTRYPOINT ["python","/app/classifynwms.py"]
 
