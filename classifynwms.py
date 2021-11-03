@@ -114,16 +114,16 @@ def main(argv):
 #         model_name = 'model_quant_f16.tflite'
 
         
-#         print(model_directory +'/'+ model_name)
+        print(model_directory +'/'+ model_name)
         print('Loading model.....')
-        print(model_file)
-        model = densemodel()
-        model.load_weights(model_file)
+#         print(model_file)
+#         model = densemodel()
+#         model.load_weights(model_file)
 #         model.load_weights(model_directory +'/'+ model_name)
 #         model.load_weights(working_path +'/'+ model_name)
 
         
-        # model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
+        model = tf.keras.models.load_model(model_directory +'/'+ model_name, compile = False)
 #         model = tf.keras.models.load_model(model_name)
 #         model = tf.saved_model.load(model_name)
 
