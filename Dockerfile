@@ -22,7 +22,7 @@ RUN pip install matplotlib
 RUN pip install numpy
 RUN pip install shapely
 RUN pip install tifffile
-RUN pip install python3-h5py
+RUN pip install h5py
 # RUN pip install pathlib
 
 RUN mkdir -p /models && \
