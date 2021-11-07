@@ -29,8 +29,8 @@ RUN mkdir -p /models && \
     cd /models && \
     mkdir -p ModelDenseNet201
 
-ADD weights.best.h5 /models/ModelDenseNet201/weights.best.h5
-RUN chmod 444 /models/ModelDenseNet201/weights.best.h5
+ADD weights.best.hdf5 /models/ModelDenseNet201/weights.best.hdf5
+RUN chmod 444 /models/ModelDenseNet201/weights.best.hdf5
 
 # RUN mkdir -p /weights_float16     
 # ADD /weights_float16/model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
