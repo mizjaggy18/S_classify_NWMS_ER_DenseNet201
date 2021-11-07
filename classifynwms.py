@@ -100,7 +100,7 @@ def main(argv):
 
 #         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
 #         model_directory = working_path
-        model_directory = '/models/ModelDenseNet201'
+        model_directory = './models/ModelDenseNet201'
 
         # model_name = 'densenet201weights.best.h5'
 #         model_dir = pathlib.Path("weights_float16/")
