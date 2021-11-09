@@ -29,7 +29,9 @@ RUN mkdir -p /models && \
     cd /models && \
     mkdir -p ModelDenseNet201
 
-ADD weights.best.hdf5 /models/ModelDenseNet201/weights.best.hdf5
+ADD keras_metadata.pb /models/ModelDenseNet201/keras_metadata.pb
+ADD saved_model.pb /models/ModelDenseNet201/saved_model.pb
+# ADD weights.best.hdf5 /models/ModelDenseNet201/weights.best.hdf5
 # RUN chmod 444 /models/ModelDenseNet201/weights.best.hdf5
 
 # RUN mkdir -p /weights_float16     
