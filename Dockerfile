@@ -27,10 +27,18 @@ RUN pip install h5py
 
 RUN mkdir -p /models && \
     cd /models && \
-    mkdir -p ModelDenseNet201
+    mkdir -p ModelDenseNet201 && \
+    cd /ModelDenseNet201 && \
+    mkdir -p /variables 
 
 ADD keras_metadata.pb /models/ModelDenseNet201/keras_metadata.pb
 ADD saved_model.pb /models/ModelDenseNet201/saved_model.pb
+
+ADD variables.data-00000-of-00001 /models/ModelDenseNet201/variables/variables.data-00000-of-00001
+ADD variables.index /models/ModelDenseNet201/variables/variables.index
+
+
+
 # ADD weights.best.hdf5 /models/ModelDenseNet201/weights.best.hdf5
 # RUN chmod 444 /models/ModelDenseNet201/weights.best.hdf5
 
