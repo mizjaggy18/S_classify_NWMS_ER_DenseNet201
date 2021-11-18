@@ -96,14 +96,16 @@
       "description": "User ID of CellDetect Stardist job analysis",
       "optional": false,
       "type": "ListDomain",
-      "uri": "/api/user_job.json?project=$currentProject$",
-      "uri-print-attribute": "username"
+      "uri": "/api/userJob.json?project=$currentProject$",
+      "uri-sort-attribute": "softwareDate",
+      "uri-print-attribute": "softwareName"
+      "command-line-flag": "--@id"
     },
     {
       "id": "cytomine_id_c0_term",
       "value-key": "[@ID]",
       "command-line-flag": "--@id",
-      "name": "Cytomine class0 (positive) cell term ID",
+      "name": "Cytomine class0 (negative) cell term ID",
       "description": "Ontology term ID for the cells that will be classified as Class 0 (Positive)",
       "optional": false,
       "type": "Domain",
