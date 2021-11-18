@@ -5,23 +5,27 @@ Trained using 3333 nuclei based on validation by collaborative pathologists.
 
 DenseNet201 model layers:
 
-global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
-dense_layer = tf.keras.layers.Dense(1920, activation='relu')
-feature_batch_average = global_average_layer(feature_batch)
-prediction_layer = tf.keras.layers.Dense(4, activation='softmax')
-prediction_batch = prediction_layer(feature_batch_average)
-
-inputs = tf.keras.Input(shape=(224, 224, 3))
-x = data_augmentation(inputs)
-x = preprocess_input(x)
-x = base_model(x, training=False)
-x = global_average_layer(x)
-x = dense_layer(x)
-x = tf.keras.layers.Dropout(0.4)(x)
-outputs = prediction_layer(x)
-model = tf.keras.Model(inputs, outputs)
-
-base_learning_rate = 0.0001
-model.compile(optimizer=tf.keras.optimizers.Adam(lr=base_learning_rate),
-              loss=tf.keras.losses.CategoricalCrossentropy(from_logits=False),
-              metrics=['accuracy'])
+def densemodel():
+    data_augmentation = tf.keras.Sequential([
+        tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
+        tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
+        tf.keras.layers.experimental.preprocessing.RandomZoom(0.2),
+    ])
+    tensor = tf.keras.Input((224, 224, 3))
+    x = tf.cast(tensor, tf.float32)
+    x = tf.keras.applications.densenet.preprocess_input(
+        x, data_format=None)
+    x = data_augmentation(x)
+    x = pretrained_model(x, training=False)
+    x = tf.keras.layers.Flatten()(x)
+    x = tf.keras.layers.Dense(256)(x)
+    x = tf.nn.relu(x)
+    x = tf.keras.layers.Dropout(0.4)(x)
+    x = tf.keras.layers.Dense(4)(x)
+    x = tf.nn.softmax(x)
+    model = tf.keras.Model(tensor, x)
+    model.compile(optimizer=tf.keras.optimizers.Adam(),
+                  loss=tf.keras.losses.CategoricalCrossentropy(),
+                  metrics=['accuracy'])
+    return model
+    
