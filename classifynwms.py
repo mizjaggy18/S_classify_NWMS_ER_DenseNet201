@@ -57,29 +57,29 @@ __author__ = "WSH Munirah W Ahmad <wshmunirah@gmail.com>"
 __version__ = "1.0.0"
 # Date created: 03 June 2021 (modified on 15 Oct 2021 for prune)
 
-# def densemodel():
-#     data_augmentation = tf.keras.Sequential([
-#         tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
-#         tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
-#         tf.keras.layers.experimental.preprocessing.RandomZoom(0.2),
-#     ])
-#     tensor = tf.keras.Input((224, 224, 3))
-#     x = tf.cast(tensor, tf.float32)
-#     x = tf.keras.applications.densenet.preprocess_input(
-#         x, data_format=None)
-#     x = data_augmentation(x)
-#     x = pretrained_model(x, training=False)
-#     x = tf.keras.layers.Flatten()(x)
-#     x = tf.keras.layers.Dense(256)(x)
-#     x = tf.nn.relu(x)
-#     x = tf.keras.layers.Dropout(0.4)(x)
-#     x = tf.keras.layers.Dense(4)(x)
-#     x = tf.nn.softmax(x)
-#     model = tf.keras.Model(tensor, x)
-#     model.compile(optimizer=tf.keras.optimizers.Adam(),
-#                   loss=tf.keras.losses.CategoricalCrossentropy(),
-#                   metrics=['accuracy'])
-#     return model
+def densemodel():
+    data_augmentation = tf.keras.Sequential([
+        tf.keras.layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
+        tf.keras.layers.experimental.preprocessing.RandomRotation(0.2),
+        tf.keras.layers.experimental.preprocessing.RandomZoom(0.2),
+    ])
+    tensor = tf.keras.Input((224, 224, 3))
+    x = tf.cast(tensor, tf.float32)
+    x = tf.keras.applications.densenet.preprocess_input(
+        x, data_format=None)
+    x = data_augmentation(x)
+    x = pretrained_model(x, training=False)
+    x = tf.keras.layers.Flatten()(x)
+    x = tf.keras.layers.Dense(256)(x)
+    x = tf.nn.relu(x)
+    x = tf.keras.layers.Dropout(0.4)(x)
+    x = tf.keras.layers.Dense(4)(x)
+    x = tf.nn.softmax(x)
+    model = tf.keras.Model(tensor, x)
+    model.compile(optimizer=tf.keras.optimizers.Adam(),
+                  loss=tf.keras.losses.CategoricalCrossentropy(),
+                  metrics=['accuracy'])
+    return model
 
 
 def main(argv):
@@ -90,6 +90,7 @@ def main(argv):
         conn.job.update(status=Job.RUNNING, progress=0, statusComment="Initialization...")
         base_path = "{}".format(os.getenv("HOME")) # Mandatory for Singularity
         working_path = os.path.join(base_path,str(conn.job.id))
+        current_dir = os.path.dirname(__file__)
 
 
         terms = TermCollection().fetch_with_filter("project", conn.parameters.cytomine_id_project)
@@ -100,9 +101,10 @@ def main(argv):
 
 #         model_directory = os.path.join(base_path,'models/ModelDenseNet201')
 #         model_directory = working_path
-        model_directory = '/models/ModelDenseNet201'
+        model_directory = "models/ModelDenseNet201/"
 
-        # model_name = 'densenet201weights.best.h5'
+        # model_name = "weights.best.h5"
+        model_name = "weights.best_v10b_100ep_cc_LR_01val.h5"
 #         model_dir = pathlib.Path("weights_float16/")
 #         
 #        print('current working dir:',pathlib.Path.cwd())
@@ -117,15 +119,15 @@ def main(argv):
 #         print(model_directory + model_name)
         print('Loading model.....')
 #         print(model_file)
-#         model = densemodel()
-#         model.load_weights(model_file)
-#         model.load_weights(model_directory +'/'+ model_name)
+        model = densemodel()
+        model.load_weights(current_dir + model_directory + model_name)
+        # model.load_weights(model_directory + model_name)
 #         model.load_weights(working_path +'/'+ model_name)
 
         
-        model = tf.keras.models.load_model(model_directory)
+        # model = tf.keras.models.load_model(model_directory + model_name)
 #         model = tf.keras.models.load_model(model_name)
-#         model = tf.saved_model.load(model_name)
+        # model = tf.saved_model.load(model_directory + model_name)
 
 #         model_interpreter = tf.lite.Interpreter(model_path=model_directory +'/'+ model_name)
 #         model_interpreter = tf.lite.Interpreter(model_path=str(model_file))
@@ -238,36 +240,36 @@ def main(argv):
                 predictions.append(model.predict(im_arr))
                 pred_labels = np.argmax(predictions, axis=-1)
         
-                print("Prediction:", predictions)
+                # print("Prediction:", predictions)
 
                 pred_labels = np.argmax(predictions, axis=-1)
-                print("PredLabels:", pred_labels)            
+                # print("PredLabels:", pred_labels)            
                 img_all.append(roi_png_filename)
                 # print(img_all)
                 
                 
                 pred_all.append(pred_labels)
-                print(pred_all)
+                # print(pred_all)
 
                 # roi_class_path=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png')
 
                 if pred_labels[i][0]==0:
-                    print("Class 0: Negative")
+                    # print("Class 0: Negative")
                     id_terms=conn.parameters.cytomine_id_c0_term
                     pred_c0=pred_c0+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class0/'+str(roi.id)+'.png'),alpha=True)
                 elif pred_labels[i][0]==1:
-                    print("Class 1: Weak")
+                    # print("Class 1: Weak")
                     id_terms=conn.parameters.cytomine_id_c1_term
                     pred_c1=pred_c1+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class1/'+str(roi.id)+'.png'),alpha=True)
                 elif pred_labels[i][0]==2:
-                    print("Class 2: Moderate")
+                    # print("Class 2: Moderate")
                     id_terms=conn.parameters.cytomine_id_c2_term
                     pred_c2=pred_c2+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class2/'+str(roi.id)+'.png'),alpha=True)
                 elif pred_labels[i][0]==3:
-                    print("Class 3: Strong")
+                    # print("Class 3: Strong")
                     id_terms=conn.parameters.cytomine_id_c3_term
                     pred_c3=pred_c3+1
                     # roi.dump(dest_pattern=os.path.join(roi_path+'Class3/'+str(roi.id)+'.png'),alpha=True)
@@ -316,15 +318,17 @@ def main(argv):
                 proportion_score = 1
             elif pred_positive_100 >= 1 and pred_positive_100 <= 10:
                 proportion_score = 2
-            elif pred_positive_100 >= 11 and pred_positive_100 <= 33:
+            elif pred_positive_100 > 10 and pred_positive_100 <= 33:
                 proportion_score = 3
-            elif pred_positive_100 >= 34 and pred_positive_100 <= 66:
+            elif pred_positive_100 > 33 and pred_positive_100 <= 66:
                 proportion_score = 4
-            elif pred_positive_100 >= 67:
+            elif pred_positive_100 > 66:
                 proportion_score = 5
 
             if pred_positive_100 == 0:
                 intensity_score = 0
+            elif im_pred == 0:
+                intensity_score = np.argmax(pred_positive)
             elif im_pred == 1:
                 intensity_score = 1
             elif im_pred == 2:
