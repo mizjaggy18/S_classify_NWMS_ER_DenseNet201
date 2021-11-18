@@ -25,9 +25,9 @@ RUN pip install tifffile
 # RUN pip install h5py
 # RUN pip install pathlib
 
-RUN mkdir -p /models && \
-    cd /models && \
-    mkdir -p ModelDenseNet201
+# RUN mkdir -p /models && \
+#     cd /models && \
+#     mkdir -p ModelDenseNet201
 #     cd /ModelDenseNet201 && \
 #     mkdir -p /variables 
 
@@ -37,8 +37,8 @@ RUN mkdir -p /models && \
 # ADD variables.data-00000-of-00001 /models/ModelDenseNet201/variables/variables.data-00000-of-00001
 # ADD variables.index /models/ModelDenseNet201/variables/variables.index
 
-ADD weights.best_v10b_100ep_cc_LR_01val.h5 /models/ModelDenseNet201/weights.best_v10b_100ep_cc_LR_01val.h5
-RUN chmod 444 /models/ModelDenseNet201/weights.best_v10b_100ep_cc_LR_01val.h5
+# ADD weights.best_v10b_100ep_cc_LR_01val.h5 /models/ModelDenseNet201/weights.best_v10b_100ep_cc_LR_01val.h5
+# RUN chmod 444 /models/ModelDenseNet201/weights.best_v10b_100ep_cc_LR_01val.h5
 
 # RUN mkdir -p /weights_float16     
 # ADD /weights_float16/model_quant_f16.tflite /weights_float16/model_quant_f16.tflite
@@ -48,7 +48,7 @@ RUN chmod 444 /models/ModelDenseNet201/weights.best_v10b_100ep_cc_LR_01val.h5
 ADD descriptor.json /app/descriptor.json
 RUN mkdir -p /app
 ADD classifynwms.py /app/classifynwms.py
-# ADD weights.best.h5 /app/weights.best.h5
+ADD weights.best_v10b_100ep_cc_LR_01val.h5 /app/weights.best_v10b_100ep_cc_LR_01val.h5
 
 ENTRYPOINT ["python", "/app/classifynwms.py"]
 
