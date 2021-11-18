@@ -104,7 +104,7 @@ def main(argv):
         model_directory = "/models/ModelDenseNet201/"
 
         # model_name = "weights.best.h5"
-        model_name = "weights.best_v10b_100ep_cc_LR_01val.h5"
+        model_name = "/weights.best_v10b_100ep_cc_LR_01val.h5"
 #         model_dir = pathlib.Path("weights_float16/")
 #         
 #        print('current working dir:',pathlib.Path.cwd())
@@ -120,7 +120,7 @@ def main(argv):
         print('Loading model.....')
 #         print(model_file)
         model = densemodel()
-        model.load_weights(current_dir + model_directory + model_name)
+        model.load_weights(current_dir + model_name)
         # model.load_weights(model_directory + model_name)
 #         model.load_weights(working_path +'/'+ model_name)
 
