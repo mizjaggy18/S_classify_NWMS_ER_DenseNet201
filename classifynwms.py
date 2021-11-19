@@ -103,8 +103,8 @@ def main(argv):
 #         model_directory = working_path
         model_directory = "/models/ModelDenseNet201/"
 
-        # model_name = "weights.best.h5"
-        model_name = "/weights.best_v10b_100ep_cc_LR_01val.h5"
+        model_name = "/weights.best.h5"
+#         model_name = "/weights.best_v10b_100ep_cc_LR_01val.h5"
 #         model_dir = pathlib.Path("weights_float16/")
 #         
 #        print('current working dir:',pathlib.Path.cwd())
