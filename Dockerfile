@@ -48,7 +48,8 @@ RUN pip install tifffile
 ADD descriptor.json /app/descriptor.json
 RUN mkdir -p /app
 ADD classifynwms.py /app/classifynwms.py
-ADD weights.best_v10b_100ep_cc_LR_01val.h5 /app/weights.best_v10b_100ep_cc_LR_01val.h5
+ADD weights.best.h5 /app/weights.best.h5
+# ADD weights.best_v10b_100ep_cc_LR_01val.h5 /app/weights.best_v10b_100ep_cc_LR_01val.h5
 
 ENTRYPOINT ["python", "/app/classifynwms.py"]
 
