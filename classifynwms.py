@@ -122,7 +122,7 @@ def main(argv):
 #         print(model_file)
 
         model = densemodel()
-        model.load_weights(current_dir + model_name)
+        model.load_weights(current_dir + model_name, by_name=False, skip_mismatch=False, options=None)
 #         model = tf.keras.models.load_model(current_dir + model_name, compile = False)
         
         # model.load_weights(model_directory + model_name)
